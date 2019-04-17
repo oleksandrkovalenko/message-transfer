@@ -15,6 +15,7 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private UUID receiverId;
+    private UUID senderId;
     private String body;
     private boolean read;
     @CreationTimestamp

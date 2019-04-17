@@ -6,6 +6,7 @@ import transfer.domain.Subscriber;
 import transfer.dto.CreateSubscriberDTO;
 import transfer.service.SubscriberService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +27,7 @@ public class SubscriberController {
     }
 
     @RequestMapping(method = RequestMethod.POST,  value = "/subscribers")
-    public Subscriber get(@RequestBody CreateSubscriberDTO createSubscriberDTO) {
+    public Subscriber get(@RequestBody @Valid CreateSubscriberDTO createSubscriberDTO) {
         return subscriberService.create(createSubscriberDTO);
     }
 

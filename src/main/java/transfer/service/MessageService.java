@@ -8,8 +8,10 @@ import transfer.dto.CreateMessageDTO;
 import transfer.repository.MessageRepository;
 import transfer.repository.SubscriberRepository;
 
+import java.nio.file.OpenOption;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -27,19 +29,21 @@ public class MessageService {
 
     public void createMessage(CreateMessageDTO createMessageDTO) {
         validateSubscriber(createMessageDTO.getReceiverId());
+        validateSubscriber(createMessageDTO.getSenderId());
 
         Message message = new Message();
         message.setReceiverId(createMessageDTO.getReceiverId());
+        message.setSenderId(createMessageDTO.getSenderId());
         message.setBody(createMessageDTO.getBody());
 
         messageRepository.save(message);
     }
 
-    private void validateSubscriber(UUID receiverId) {
-        Objects.requireNonNull(receiverId);
-        Subscriber subscriber = subscriberRepository.getOne(receiverId);
-        if (subscriber == null) {
-            throw new IllegalArgumentException("Subscriber does not exist");
+    private void validateSubscriber(UUID subscriberId) {
+        Objects.requireNonNull(subscriberId);
+        Optional<Subscriber> subscriber = subscriberRepository.findById(subscriberId);
+        if (!subscriber.isPresent()) {
+            throw new IllegalArgumentException(String.format("Subscriber not found with id %s", subscriberId));
         }
     }
 }

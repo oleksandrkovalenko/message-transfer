@@ -1,5 +1,5 @@
 create table subscribers
 (
     id uuid,
-    name text
+    name text not null
 )

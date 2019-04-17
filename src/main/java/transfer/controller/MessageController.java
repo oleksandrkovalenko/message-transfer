@@ -7,6 +7,7 @@ import transfer.domain.Message;
 import transfer.dto.CreateMessageDTO;
 import transfer.service.MessageService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +24,7 @@ public class MessageController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST, value = "/messages")
-    public void createMessage(@RequestBody CreateMessageDTO createMessageDTO) {
+    public void createMessage(@RequestBody @Valid CreateMessageDTO createMessageDTO) {
         messageService.createMessage(createMessageDTO);
     }
 

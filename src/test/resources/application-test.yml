@@ -4,12 +4,12 @@ spring:
   datasource:
     name: sa
     password: sa
-    url: jdbc:sqlite:database/sqlite.db
+    url: "jdbc:sqlite::memory:"
     driver-class-name: org.sqlite.JDBC
   flyway:
     locations: classpath:db/migration
-
 transfer:
   server:
     masterToken:
-      random: true
+      random: false
+      token: c66ae886-d6f0-4a75-aa30-3a5c3b432c9b
