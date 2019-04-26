@@ -1,18 +1,20 @@
 package transfer.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import transfer.domain.Message;
 import transfer.domain.Subscriber;
 import transfer.dto.CreateMessageDTO;
+import transfer.dto.MessageDTO;
 import transfer.repository.MessageRepository;
 import transfer.repository.SubscriberRepository;
 
-import java.nio.file.OpenOption;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class MessageService {
@@ -22,20 +24,21 @@ public class MessageService {
     @Autowired
     private SubscriberRepository subscriberRepository;
 
-    public List<Message> getAllForReceiver(UUID receiverId) {
+    @Autowired
+    private ConversionService conversionService;
+
+    public List<MessageDTO> getAllForReceiver(UUID receiverId) {
         validateSubscriber(receiverId);
-        return messageRepository.findAllByReceiverId(receiverId);
+        List<Message> messages = messageRepository.findAllByReceiverId(receiverId);
+        return messages.stream()
+                .map(message -> conversionService.convert(message, MessageDTO.class))
+                .collect(Collectors.toList());
     }
 
     public void createMessage(CreateMessageDTO createMessageDTO) {
         validateSubscriber(createMessageDTO.getReceiverId());
         validateSubscriber(createMessageDTO.getSenderId());
-
-        Message message = new Message();
-        message.setReceiverId(createMessageDTO.getReceiverId());
-        message.setSenderId(createMessageDTO.getSenderId());
-        message.setBody(createMessageDTO.getBody());
-
+        Message message = conversionService.convert(createMessageDTO, Message.class);
         messageRepository.save(message);
     }
 
