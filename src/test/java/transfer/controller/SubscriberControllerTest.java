@@ -104,4 +104,24 @@ public class SubscriberControllerTest {
         //@formatter:on
     }
 
+    @Test
+    public void getSubscriber() {
+        Subscriber subscriber = new Subscriber();
+        subscriber.setName(TEST_SUBSCRIBER);
+        subscriberRepository.save(subscriber);
+        String subscriberId = subscriber.getId().toString();
+
+        //@formatter:off
+        given()
+            .headers(createHeaders(AUTH_TOKEN))
+        .when()
+            .get(url + "/" + subscriberId)
+            .prettyPeek()
+        .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(subscriberId))
+            .body("name", is(TEST_SUBSCRIBER));
+        //@formatter:on
+    }
+
 }

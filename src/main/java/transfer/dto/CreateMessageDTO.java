@@ -14,4 +14,5 @@ public class CreateMessageDTO {
     private UUID senderId;
     @NotBlank
     private String body;
+    private UUID parentMessageId;
 }
